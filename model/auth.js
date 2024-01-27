@@ -13,7 +13,7 @@ async function register(params) {
     // check if user exits
     let user = await User.findOne({ where: { emailID: params.email } }).catch((error) => { return { error } })
     if (user) {
-        return { error: 'User already existed', status: 409 }
+        return { error: 'User already exists', status: 409 }
     }
 
     // hash password
@@ -35,7 +35,7 @@ async function register(params) {
         return { error: 'Internal Server Error', status: 500 }
     }
 
-    // return only minum response
+    // return only minimum response
     let response = {
         id: insert.id,
         username: insert.name,
