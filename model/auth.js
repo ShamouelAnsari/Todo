@@ -19,7 +19,7 @@ async function register(params) {
     // hash password
     let password = await bcrypt.hash(params.password, 10).catch((error) => { return { error } })
     if (!password || (password && password.error)) {
-        return { error: "Internal server error", status: 500 }
+        return { error: "hash password error", status: 500 }
     }
 
     // data formatting
@@ -29,10 +29,10 @@ async function register(params) {
         password: password
     }
 
-    // inserting into databse
+    // inserting into database
     let insert = await User.create(data).catch((error) => { return { error } })
     if (!insert || (insert && insert.error)) {
-        return { error: 'Internal Server Error', status: 500 }
+        return { error: 'Insert error', status: 500 }
     }
 
     // return only minimum response

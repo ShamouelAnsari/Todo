@@ -5,7 +5,7 @@ class User extends Model { }
 User.init({
     // schema
     id: {
-        type: DataTypes.INTEGER, auto_increment: true, allowNull: false, primaryKey: true
+        type: DataTypes.INTEGER, autoIncrement: true, allowNull: false, primaryKey: true
     },
     name: {
         type: DataTypes.STRING(155), allowNull: false
