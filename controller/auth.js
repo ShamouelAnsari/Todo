@@ -20,4 +20,15 @@ async function login(req, res) {
     return res.header("token", data.token).send({ status: 'Success !!!' })
 }
 
-module.exports = { register, login }
+async function forgetPassword(req,res){
+    let data = await auth.forgetPassword(req.body).catch((error)=>{return {error}})
+    console.log("Check data: ",data)
+    if (!data || (data && data.error)) {
+        let error = (data && data.error) ? data.error : 'Controller Internal server error'
+        let status = (data && data.status) ? data.status : 500
+        return res.status(status).send({ error })
+    }
+    return res.send({status:'success'})
+}
+
+module.exports = { register, login, forgetPassword }
