@@ -1,6 +1,9 @@
 let { transport } = require("../intit/mailconfig");
 
 async function sendMail() {
+    // if(typeof(to)!='string' || typeof(from)!='string'){
+    //     return {error:"Please provide to and from email in string"}
+    // }
     let send = await transport.sendMail({
         to: "ansarishamouel01@gmail.com",
         from: "ansarishamouel03@gmail.com",

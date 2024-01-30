@@ -1,13 +1,12 @@
 let mailer = require('nodemailer')
+let config = require('config')
+let mailCredential = config.get("mailCredential")
 
 let transport = mailer.createTransport({
     host: 'smtp.gmail.com',
     port: "465",
     secure: true,
-    auth: {
-        user: 'ansarishamouel03@gmail.com',
-        pass: 'vdor xbvt zmxx kxov'
-    }
+    auth: mailCredential
 });
 
 module.exports = { transport }

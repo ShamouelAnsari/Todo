@@ -6,5 +6,9 @@
         "username":"root",
         "password": "",
         "database":"todo"
+    },
+    "mailCredential":{
+        "user": "ansarishamouel03@gmail.com",
+        "pass": "vdor xbvt zmxx kxov"
     }
 }
