@@ -4,6 +4,8 @@ let bcrypt = require('bcrypt')
 let security = require('../helper/security')
 let {sendMail} = require('../helper/mailer')
 let {validate} = require('../helper/validate')
+let config = require('config')
+let mailCredential = config.get("mailCredential")
 
 async function register(params) {
     let schema = joi.object({
@@ -138,13 +140,20 @@ async function forgetPassword(params){
     } 
 
     // save hash opt in db
-    let update = await User.update({ hash }, { where: { id: user.id } }).catch((error) => { return { error } })
+    let update = await User.update({ otp:hash }, { where: { id: user.id } }).catch((error) => { return { error } })
     if (!update || (update && update.error)) {
         return { error: 'opt not updated', status: 500 }
     }
     
     // send mail to user (later last me karenge)
-    let mail = await sendMail().catch((error)=>{return{error}})
+    let mailSend = {
+        to: params.email,
+        from: mailCredential.user,
+        subject: "Forget Password",
+        text:`Otp for resetting password is ${otp}`
+    }
+
+    let mail = await sendMail(mailSend).catch((error)=>{return{error}})
     if(!mail||(mail&&mail.error)){
         return{error:"mail Internal server error",status:500}
     }
@@ -153,8 +162,64 @@ async function forgetPassword(params){
     return {data:mail}
 }
 
+async function resetPassword(params){
+    let schema = joi.object({
+        otp: joi.string().min(4).max(6).required(),
+        email: joi.string().max(255).required(),
+        password: joi.string().min(8).max(12).required(),
+    })
+
+    // user data validation
+    let check = await validate(schema,params).catch((error)=>{return {error}})
+    if(!check||(check && check.error)){
+        return {error:check.error,status:500}
+    }
+
+    // check if email exists
+    let user = await User.findOne({where:{emailID:params.email}}).catch((error)=>{return{error}})
+    if(!user||(user && user.error)){
+        return {error:'User not found email does not exists',status:500}
+    }
+
+    // compare otp
+    let compare = await bcrypt.compare(params.otp,user.otp).catch((error)=>{return {error}})
+    if(!compare||(compare && compare.error)){
+        return {error:'Otp not valid',status:500}
+    }
+
+    // hash password
+    let password = await bcrypt.hash(params.password,10).catch((error)=>{return {error}})
+    if(!password||(password && password.error)){
+        return {error:'Internal server error',status:500}
+    }
+
+    // update password in db
+    let update = await User.update({password:password,otp:""},{where:{id:user.id}}).catch((error)=>{return {error}})
+    if(!update||(update && update.error)){
+        return {error:'Password not updated',status:500}
+    }
+
+    // return response
+    return {data:"Password updated sucessfully"}
+}
+
 async function logout(userData) {
+    let schema = joi.object({
+        id: joi.number().required()
+    })
+
+    let check = await validate(schema,{id:userData.id}).catch((error)=>{return {error}})
+    if(!check||(check&&check.error)){
+        return {error:check.error,status:400}
+    }
+
+    let update = await User.update({token:""},{where:{id:userData.id}}).catch((error)=>{return {error}})
+    if(!update||(update&&update.error)){
+        return {error:"Not Logout",status:500}
+    }
+
+    return {data:"Success"}
 
 }
 
-module.exports = { register, login, logout ,forgetPassword}
+module.exports = { register, login, forgetPassword, resetPassword, logout}
