@@ -1,7 +1,7 @@
 async function validate(schema,data){
-    // if(typeof(schema)!='object'||typeof(data)!='object'){
-    //     return {error:"Provde schema and data in object"}
-    // }
+    if(typeof(schema)!='object'||typeof(data)!='object'){
+        return {error:"Provde schema and data in object"}
+    }
 
     let valid = schema.validateAsync(data, { abortEarly: false }).catch((error) => { return { error } })
     if (!valid || (valid && valid.error)) {

@@ -1,3 +1,4 @@
+const { func } = require('joi');
 let auth = require('../model/auth');
 
 async function register(req, res) {
@@ -40,8 +41,8 @@ async function resetPassword(req, res) {
     return res.send({ status: 'Password updated successfully' })
 }
 
-async function logout(req,res){
-    let data = await auth.logout(req.userData).catch((error)=>{return {error}})
+async function logout(req, res) {
+    let data = await auth.logout(req.userData).catch((error) => { return { error } })
     if (!data || (data && data.error)) {
         let error = (data && data.error) ? data.error : 'Controller Internal server error'
         let status = (data && data.status) ? data.status : 500
@@ -51,4 +52,15 @@ async function logout(req,res){
     return res.send({ status: 'Logout successfully' })
 }
 
-module.exports = { register, login, forgetPassword, resetPassword, logout }
+async function changePassword(req, res) {
+    let data = await auth.changePassword(req.body, req.userData).catch((error) => { return { error } })
+    console.log('contoller data: ',data);
+    if (!data || (data && data.error)) {
+        let error = (data && data.error) ? data.error : "Controller Internal Server error"
+        let status = (data && data.status) ? data.status : 500
+        return res.status(status).send({error})
+    }
+    return res.send({status: "Password changed sucessfully"})
+}
+
+module.exports = { register, login, forgetPassword, resetPassword, logout, changePassword }
