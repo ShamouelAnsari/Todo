@@ -1,4 +1,3 @@
-const { func } = require('joi');
 let auth = require('../model/auth');
 
 async function register(req, res) {
@@ -54,13 +53,12 @@ async function logout(req, res) {
 
 async function changePassword(req, res) {
     let data = await auth.changePassword(req.body, req.userData).catch((error) => { return { error } })
-    console.log('contoller data: ',data);
     if (!data || (data && data.error)) {
         let error = (data && data.error) ? data.error : "Controller Internal Server error"
         let status = (data && data.status) ? data.status : 500
-        return res.status(status).send({error})
+        return res.status(status).send({ error })
     }
-    return res.send({status: "Password changed sucessfully"})
+    return res.send({ status: "Password changed sucessfully" })
 }
 
 module.exports = { register, login, forgetPassword, resetPassword, logout, changePassword }

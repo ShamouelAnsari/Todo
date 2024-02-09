@@ -230,34 +230,29 @@ async function changePassword(params, userData) {
 
     // user data validation
     let check = await validate(schema, params).catch((error) => { return { error } })
-    console.log("check data: ", check)
     if (!check || (check && check.error)) {
         return { error: check.error, status: 500 }
     }
     // fetch user from db
     let user = await User.findOne({ where: { id: userData.id } }).catch((error) => { return { error } })
-    console.log("user data: ", user)
     if (!user || (user && user.error)) {
         return { error: 'User not found email does not exists', status: 500 }
     }
 
     // enter old password for changing then compare old password from db
-    let compare = await bcrypt.compare(params.oldPassword,user.password).catch((error)=>{return {error}})
-    console.log("compare data: ",compare);
-    if(!compare||(compare&&compare.error)){
-        return {error:"Old password not match"}
+    let compare = await bcrypt.compare(params.oldPassword, user.password).catch((error) => { return { error } })
+    if (!compare || (compare && compare.error)) {
+        return { error: "Old password not match" }
     }
 
     // hash new password
     let password = await bcrypt.hash(params.newPassword, 10).catch((error) => { return { error } })
-    console.log("password data", password);
     if (!password || (password && password.error)) {
         return { error: 'password not encryption error', status: 500 }
     }
 
     // update password in db
     let update = await User.update({ password, token: "" }, { where: { id: user.id } }).catch((error) => { return { error } })
-    console.log("update data: ", update)
     if (!update || (update && update.error)) {
         return { error: 'Password not updated', status: 500 }
     }
