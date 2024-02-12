@@ -7,7 +7,17 @@ async function createTask(req, res) {
         let status = (data && data.status) ? data.status : 500
         return res.status(status).send({ error })
     }
-    return res.send({ status: 'Task created succesfully' })
+    return res.send({ status: 'Task Created Successfully' })
 }
 
-module.exports = { createTask }
+async function updatetask(req, res) {
+    let data = await task.updatetask(req.params.taskId, req.body, req.userData).catch(error => { return { error } })
+    if(!data || (data && data.error)){
+        let error = (data && data.error) ? data.error :" Internal SErver Error"
+        let status = (data && data.status) ? data.status : 500
+        return res.status(status).send({error})
+    }
+    return res.send({status: "Task Updated Successfully"})
+}
+
+module.exports = { createTask, updatetask}
