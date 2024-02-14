@@ -18,5 +18,6 @@ router.put('/changePassword', auth, authController.changePassword)
 // PHASE 2 TASK Related API's
 router.post('/createTask',auth,taskController.createTask)
 router.put('/updateTask/:taskId',auth,taskController.updatetask)
+router.get('/listTask',auth,taskController.listTask)
 
 module.exports = router;

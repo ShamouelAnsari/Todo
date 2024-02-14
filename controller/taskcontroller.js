@@ -12,12 +12,22 @@ async function createTask(req, res) {
 
 async function updatetask(req, res) {
     let data = await task.updatetask(req.params.taskId, req.body, req.userData).catch(error => { return { error } })
-    if(!data || (data && data.error)){
-        let error = (data && data.error) ? data.error :" Internal SErver Error"
+    if (!data || (data && data.error)) {
+        let error = (data && data.error) ? data.error : " Internal SErver Error"
         let status = (data && data.status) ? data.status : 500
-        return res.status(status).send({error})
+        return res.status(status).send({ error })
     }
-    return res.send({status: "Task Updated Successfully"})
+    return res.send({ status: "Task Updated Successfully" })
 }
 
-module.exports = { createTask, updatetask}
+async function listTask(req, res) {
+    let data = await task.listTask(req.body,req.userData).catch((error) => { return { error } })
+    if (!data || (data && data.error)) {
+        let error = (data && data.error) ? data.error : " Internal SErver Error"
+        let status = (data && data.status) ? data.status : 500
+        return res.status(status).send({ error })
+    }
+    return res.send({data:data.data })
+}
+
+module.exports = { createTask, updatetask, listTask }

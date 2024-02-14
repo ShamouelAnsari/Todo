@@ -1,6 +1,7 @@
 let { Task } = require('../schema/task');
 let joi = require('joi');
 let { validate } = require('../helper/validate');
+let { sequelizeCon, QueryTypes } = require('../intit/dbconfig');
 
 async function createTask(params, userData) {
     let schema = joi.object({
@@ -84,4 +85,25 @@ async function updatetask(taskId, params, userData) {
     return { data: update }
 }
 
-module.exports = { createTask, updatetask }
+async function listTask(params,userData) {
+
+    // SQL Query
+    let sqlQuery = `select task.name as taskName, user.name as createdBy
+    from task 
+    left join user on task.createdBy = user.id
+    where task.createdBy = :userID or task.assignTo = :userID`;
+
+    // create the sql query
+    let task = await sequelizeCon.query(sqlQuery,
+        { type: QueryTypes.SELECT ,
+            replacements:{userID: userData.id}
+        }).catch((error) => { return { error } })
+    if (!task || (task && task.error)) {
+        return { error: 'Task not found', status: 404 }
+    }
+
+    // return response
+    return { data: task }
+}
+
+module.exports = { createTask, updatetask, listTask }
