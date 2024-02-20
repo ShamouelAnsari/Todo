@@ -119,7 +119,7 @@ async function forgetPassword(params) {
     })
 
     // user data validation
-    let check = await validate(schema, params.email).catch((error) => { return { error } })
+    let check = await validate(schema, params).catch((error) => { return { error } })
     if (!check || (check && check.error)) {
         return { error: check.error, status: 400 }
     }
