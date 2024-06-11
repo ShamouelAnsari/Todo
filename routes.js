@@ -3,6 +3,7 @@ let authController = require('./controller/auth')
 let router = express.Router()
 let auth = require("./middleware/auth")
 let taskController = require("./controller/taskcontroller")
+let comController = require("./controller/comcontroller")
 
 router.get('/', (req, res) => {
     return res.send("~~ Welcome To the Project ~~")
@@ -21,5 +22,12 @@ router.put('/assignTask', auth, taskController.assignTask)
 router.put('/updateTask/:taskId', auth, taskController.updateTask)
 router.get('/listTask', auth, taskController.listTask)
 router.get('/detailTask/:taskId', auth, taskController.detailTask)
+router.delete('/deleteTask/:taskId', auth, taskController.deleteTask)
+router.put('/restoreTask/:taskId', auth, taskController.restoreTask)
+router.put('/updateTaskStatus/:taskId', auth, taskController.updateTaskStatus)
+
+// PHASE 3 Comment related API's
+router.post('/task/comment/:taskId', auth, comController.addComment)
+router.get('/task/comment/:taskId', auth, comController.listComment)
 
 module.exports = router;

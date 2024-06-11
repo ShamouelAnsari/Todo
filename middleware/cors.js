@@ -1,21 +1,18 @@
-// middleware daal
+let corsObj = {
+    origin:(domain,cb)=>{
+        let whiteList={
+            // 'abc.com':true,
+            // 'abc.co.in':true,
+            // 'microsoft.com':true,
+            // 'google.com':true
+            "http://localhost:3000": true
+        }
 
-// let cors = require('cors')
+        if(!whiteList[domain]){
+            return cb('domain not found',false)
+        }
+        return cb(null,true)
+    }
+}
 
-// let corsObj = {
-//     origin:(domain,cb)=>{
-//         let whiteList={
-//             'abc.com':true,
-//             'abc.co.in':true,
-//             'microsoft.com':true,
-//             'google.com':true
-//         }
-
-//         if(!whiteList[domain]){
-//             return cb('data not found',false)
-//         }
-//         return cb(null,true)
-//     }
-// }
-
-// module.exports = cors
+module.exports = corsObj

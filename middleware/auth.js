@@ -1,4 +1,4 @@
-let security = require('../helper/security')
+let {verifyAsync} = require('../helper/security')
 let { User } = require("../schema/user")
 
 async function auth(req, res, next) {
@@ -10,7 +10,7 @@ async function auth(req, res, next) {
     }
 
     // decrypt token using jwt
-    let decryptedToken = await security.verifyAsync(token).catch((error) => { return { error } })
+    let decryptedToken = await verifyAsync(token).catch((error) => { return { error } })
     if (!decryptedToken || (decryptedToken && decryptedToken.error)) {
         return res.status(403).send({ error: "Token not valid" })
     }
@@ -27,11 +27,11 @@ async function auth(req, res, next) {
     }
 
     req["userData"] = {
-        id: user.id, email: user.email, name: user.name, isActive: user.isActive
+        id: user.id, email: user.emailID, name: user.name, isActive: user.idActive
     }
 
     // pass request to next function 
     next()
 }
 
-module.exports = auth;
+module.exports = auth;  

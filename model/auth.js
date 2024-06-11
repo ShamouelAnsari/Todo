@@ -219,6 +219,7 @@ async function logout(userData) {
     }
 
     return { data: "Success" }
+    // return { data: update }
 
 }
 
@@ -252,7 +253,7 @@ async function changePassword(params, userData) {
     }
 
     // update password in db
-    let update = await User.update({ password, token: "" }, { where: { id: user.id } }).catch((error) => { return { error } })
+    let update = await User.update({ password: password, token: "" }, { where: { id: user.id } }).catch((error) => { return { error } })
     if (!update || (update && update.error)) {
         return { error: 'Password not updated', status: 500 }
     }

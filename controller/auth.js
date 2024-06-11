@@ -17,7 +17,8 @@ async function login(req, res) {
         let status = (data && data.status) ? data.status : 500
         return res.status(status).send({ error })
     }
-    return res.header("token", data.token).send({ status: 'Success !!!' })
+    // return res.header("token", data.token).send({ status: 'Success !!!' })
+    return res.header({ "Access-Control-Expose-Headers": "token", "token": data.token }).send({ status: "Success !!!" })
 }
 
 async function forgetPassword(req, res) {
@@ -47,7 +48,6 @@ async function logout(req, res) {
         let status = (data && data.status) ? data.status : 500
         return res.status(status).send({ error })
     }
-
     return res.send({ status: 'Logout successfully' })
 }
 

@@ -17,5 +17,5 @@ function verifyAsync(token, key = '1234567890') {
         })
     })
 }
-
+    
 module.exports = { signAsync, verifyAsync }

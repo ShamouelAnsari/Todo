@@ -10,5 +10,8 @@
     "mailCredential":{
         "user": "ansarishamouel03@gmail.com",
         "pass": "vdor xbvt zmxx kxov"
-    }
+    },
+    "statusCode":[
+        "", "Created","Assigned","Pick","Rejected","Working","Hold","Completed"
+    ]
 }
